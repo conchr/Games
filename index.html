@@ -268,6 +268,55 @@
                         inset 0 4px 0 rgba(255, 255, 255, 0.2);
             filter: brightness(1.1);
         }
+
+        /* Νέο κουμπί Farsala Center Page */
+        .farsala-center-button {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            border-radius: 18px;
+            padding: 18px 35px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 
+                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
+                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
+            border: 3px solid #fff;
+            text-decoration: none;
+            display: inline-block;
+            margin: 25px auto;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            text-align: center;
+        }
+        
+        .farsala-center-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(rgba(255,255,255,0.1), transparent);
+            border-radius: 15px;
+        }
+        
+        .farsala-center-button:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3), 
+                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
+                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
+            filter: brightness(1.1);
+        }
+        
+        .center-button-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
         
         footer {
             margin-top: 30px;
@@ -332,6 +381,12 @@
                 font-size: 1.1rem;
             }
             
+            .farsala-center-button {
+                padding: 15px 25px;
+                font-size: 1.1rem;
+                margin: 20px auto;
+            }
+            
             .main-title {
                 margin-bottom: 15px;
             }
@@ -392,6 +447,12 @@
                 font-size: 1rem;
             }
             
+            .farsala-center-button {
+                padding: 12px 20px;
+                font-size: 1rem;
+                margin: 15px auto;
+            }
+            
             footer {
                 margin-top: 20px;
                 padding: 10px 10px 5px;
@@ -421,6 +482,12 @@
             .game-button {
                 padding: 15px 10px;
                 min-height: 70px;
+            }
+
+            .farsala-center-button {
+                padding: 14px 20px;
+                font-size: 1.1rem;
+                margin: 18px auto;
             }
 
             footer {
@@ -490,6 +557,11 @@
             <div class="menu-button quiz-button" onclick="showPage('quiz')">Κουίζ Γνώσεων</div>
             <div class="menu-button puzzle-button" onclick="showPage('puzzle')">Puzzle Games</div>
         </div>
+
+        <!-- Νέο κουμπί Farsala Center Page -->
+        <div class="center-button-container">
+            <a href="https://conchr.github.io/Farsala-Center-Page/" class="farsala-center-button">Farsala Center Page</a>
+        </div>
         
         <footer>
             <div class="footer-main">Δημιουργήθηκε με ❤️ για τη μάθηση της ιστορίας των Φαρσάλων</div>
@@ -532,6 +604,11 @@
             </div>
             
             <div class="back-button" onclick="showPage('index')">Επιστροφή στην Αρχική Σελίδα</div>
+        </div>
+
+        <!-- Νέο κουμπί Farsala Center Page -->
+        <div class="center-button-container">
+            <a href="https://conchr.github.io/Farsala-Center-Page/" class="farsala-center-button">Farsala Center Page</a>
         </div>
 
         <footer>
@@ -580,6 +657,11 @@
             <div class="back-button" onclick="showPage('index')">Επιστροφή στην Αρχική Σελίδα</div>
         </div>
 
+        <!-- Νέο κουμπί Farsala Center Page -->
+        <div class="center-button-container">
+            <a href="https://conchr.github.io/Farsala-Center-Page/" class="farsala-center-button">Farsala Center Page</a>
+        </div>
+
         <footer>
             <div class="footer-main">Δημιουργήθηκε με ❤️ για τη μάθηση της ιστορίας των Φαρσάλων</div>
             <div class="creator-credit">Created by: Κωνσταντίνος Χριστοδούλου</div>
@@ -609,6 +691,11 @@
             </div>
             
             <div class="back-button" onclick="showPage('index')">Επιστροφή στην Αρχική Σελίδα</div>
+        </div>
+
+        <!-- Νέο κουμπί Farsala Center Page -->
+        <div class="center-button-container">
+            <a href="https://conchr.github.io/Farsala-Center-Page/" class="farsala-center-button">Farsala Center Page</a>
         </div>
 
         <footer>
