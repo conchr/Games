@@ -4,752 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Μάθε την Ιστορία των Φαρσάλων μέσα από το Παιχνίδι</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Comic Neue', cursive;
-            background: linear-gradient(135deg, #6a89cc, #4a69bd);
-            color: #fff;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%234a69bd"/><path d="M0,50 L100,50 M50,0 L50,100" stroke="%236a89cc" stroke-width="2" opacity="0.2"/></svg>');
-            overflow-x: hidden;
-        }
-        
-        /* Βασικό container για όλες τις σελίδες */
-        .page {
-            display: none;
-            width: 100%;
-            max-width: 1200px;
-            flex-direction: column;
-            align-items: center;
-            min-height: 80vh;
-        }
-        
-        /* Η ενεργή σελίδα */
-        .page.active {
-            display: flex;
-        }
-        
-        .main-title {
-            font-family: 'Fredoka One', cursive;
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
-            color: #f1c40f;
-            text-shadow: 3px 3px 0 #e67e22, 6px 6px 0 rgba(0, 0, 0, 0.2);
-            letter-spacing: 1px;
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 0 15px;
-            width: 100%;
-        }
-        
-        .container {
-            width: 100%;
-            text-align: center;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 30px;
-        }
-        
-        .menu-container {
-            max-width: 600px;
-            padding: 40px 30px;
-        }
-        
-        .menu-button {
-            display: block;
-            width: 100%;
-            background: linear-gradient(145deg, #ff9a3c, #ff6b6b);
-            border-radius: 18px;
-            padding: 25px 20px;
-            margin: 20px 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 
-                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
-                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
-            border: 3px solid #fff;
-            text-decoration: none;
-            font-size: clamp(1.3rem, 3vw, 1.6rem);
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            opacity: 0;
-            animation: slideInUp 0.8s ease-out forwards;
-        }
-        
-        .menu-button:nth-child(1) { animation-delay: 0.5s; }
-        .menu-button:nth-child(2) { animation-delay: 0.7s; }
-        .menu-button:nth-child(3) { animation-delay: 0.9s; }
-        .menu-button:nth-child(4) { animation-delay: 1.1s; }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes slideInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .menu-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(rgba(255,255,255,0.1), transparent);
-            border-radius: 15px;
-        }
-        
-        .menu-button:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3), 
-                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
-                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
-            filter: brightness(1.1);
-        }
-        
-        .menu-button:active {
-            transform: translateY(2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 
-                        inset 0 -2px 0 rgba(0, 0, 0, 0.2),
-                        inset 0 2px 0 rgba(255, 255, 255, 0.2);
-        }
-        
-        .quiz-button {
-            background: linear-gradient(145deg, #a29bfe, #6c5ce7);
-        }
-        
-        .puzzle-button {
-            background: linear-gradient(145deg, #00b894, #00cec9);
-        }
-        
-        .hangman-button {
-            background: linear-gradient(145deg, #e74c3c, #c0392b);
-        }
-        
-        .section-title {
-            font-size: clamp(1.4rem, 3vw, 1.8rem);
-            color: #f1c40f;
-            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
-            font-weight: 700;
-            font-style: italic;
-            margin-bottom: 30px;
-        }
-        
-        .games-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-            width: 100%;
-        }
-        
-        .game-button {
-            background: linear-gradient(145deg, #ff9a3c, #ff6b6b);
-            border-radius: 18px;
-            padding: 20px 15px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 
-                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
-                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
-            border: 3px solid #fff;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 90px;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .game-button.quiz {
-            background: linear-gradient(145deg, #a29bfe, #6c5ce7);
-        }
-        
-        .game-button.puzzle {
-            background: linear-gradient(145deg, #00b894, #00cec9);
-        }
-        
-        .game-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(rgba(255,255,255,0.1), transparent);
-            border-radius: 15px;
-        }
-        
-        .game-button:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3), 
-                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
-                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
-            filter: brightness(1.1);
-        }
-        
-        .game-title {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
-            text-align: center;
-            line-height: 1.3;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .back-button {
-            background: linear-gradient(145deg, #00b894, #00cec9);
-            border-radius: 18px;
-            padding: 15px 30px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 
-                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
-                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
-            border: 3px solid #fff;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        
-        .back-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(rgba(255,255,255,0.1), transparent);
-            border-radius: 15px;
-        }
-        
-        .back-button:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3), 
-                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
-                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
-            filter: brightness(1.1);
-        }
+    <meta name="description" content="Διαδραστικά παιχνίδια για τη μάθηση της ιστορίας των Φαρσάλων">
 
-        /* Νέο κουμπί Farsala Center Page */
-        .farsala-center-button {
-            background: linear-gradient(145deg, #e74c3c, #c0392b);
-            border-radius: 18px;
-            padding: 18px 35px;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 
-                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
-                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
-            border: 3px solid #fff;
-            text-decoration: none;
-            display: inline-block;
-            margin: 25px auto;
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #fff;
-            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.3);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            text-align: center;
-        }
-        
-        .farsala-center-button::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(rgba(255,255,255,0.1), transparent);
-            border-radius: 15px;
-        }
-        
-        .farsala-center-button:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3), 
-                        inset 0 -4px 0 rgba(0, 0, 0, 0.2),
-                        inset 0 4px 0 rgba(255, 255, 255, 0.2);
-            filter: brightness(1.1);
-        }
-        
-        .center-button-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        
-        footer {
-            margin-top: 30px;
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-            padding: 20px 15px 10px;
-            width: 100%;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-        .footer-main {
-            margin-bottom: 5px;
-        }
-
-        .creator-credit {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.6);
-            text-align: center;
-            margin-top: 5px;
-        }
-
-        /* Βελτιστοποίηση για portrait κινητά */
-        @media (max-width: 768px) and (orientation: portrait) {
-            body {
-                padding: 10px;
-                justify-content: flex-start;
-                min-height: 100vh;
-            }
-            
-            .container {
-                padding: 20px 15px;
-                border-radius: 20px;
-                margin-bottom: 20px;
-            }
-            
-            .menu-container {
-                padding: 30px 20px;
-            }
-            
-            .menu-button {
-                padding: 20px 15px;
-                margin: 15px 0;
-            }
-            
-            .games-container {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-            
-            .game-button {
-                padding: 18px 12px;
-                min-height: 80px;
-            }
-            
-            .back-button {
-                padding: 12px 25px;
-                font-size: 1.1rem;
-            }
-            
-            .farsala-center-button {
-                padding: 15px 25px;
-                font-size: 1.1rem;
-                margin: 20px auto;
-            }
-            
-            .main-title {
-                margin-bottom: 15px;
-            }
-
-            footer {
-                margin-top: 25px;
-                padding: 15px 10px 5px;
-                gap: 8px;
-            }
-
-            .creator-credit {
-                font-size: 0.75rem;
-            }
-        }
-
-        /* Βελτιστοποίηση για landscape κινητά */
-        @media (max-height: 600px) and (orientation: landscape) {
-            body {
-                padding: 10px;
-                justify-content: flex-start;
-                min-height: auto;
-            }
-            
-            .main-title {
-                margin-bottom: 10px;
-                font-size: 1.5rem;
-            }
-            
-            .container {
-                padding: 15px;
-                margin-bottom: 15px;
-            }
-            
-            .menu-container {
-                padding: 20px 15px;
-            }
-            
-            .menu-button {
-                padding: 15px 10px;
-                margin: 10px 0;
-                font-size: 1.1rem;
-            }
-            
-            .games-container {
-                margin-top: 15px;
-                gap: 8px;
-                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            }
-            
-            .game-button {
-                padding: 12px 8px;
-                min-height: 70px;
-            }
-            
-            .back-button {
-                margin-top: 15px;
-                padding: 10px 20px;
-                font-size: 1rem;
-            }
-            
-            .farsala-center-button {
-                padding: 12px 20px;
-                font-size: 1rem;
-                margin: 15px auto;
-            }
-            
-            footer {
-                margin-top: 20px;
-                padding: 10px 10px 5px;
-                gap: 5px;
-            }
-
-            .creator-credit {
-                font-size: 0.75rem;
-            }
-        }
-
-        /* Βελτιστοποίηση για πολύ μικρές οθόνες */
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px 10px;
-            }
-            
-            .menu-container {
-                padding: 25px 15px;
-            }
-            
-            .menu-button {
-                padding: 18px 12px;
-                margin: 12px 0;
-            }
-            
-            .game-button {
-                padding: 15px 10px;
-                min-height: 70px;
-            }
-
-            .farsala-center-button {
-                padding: 14px 20px;
-                font-size: 1.1rem;
-                margin: 18px auto;
-            }
-
-            footer {
-                margin-top: 20px;
-                padding: 15px 5px 5px;
-            }
-
-            .creator-credit {
-                font-size: 0.7rem;
-            }
-        }
-
-        /* Βελτιστοποίηση για tablets */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .games-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Βελτιστοποίηση για μεγάλες οθόνες */
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 1100px;
-            }
-            
-            .games-container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            footer {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: flex-end;
-                padding: 25px 20px 15px;
-            }
-
-            .footer-main {
-                text-align: left;
-                margin-bottom: 0;
-            }
-
-            .creator-credit {
-                text-align: right;
-                margin-top: 0;
-            }
-        }
-
-        /* Βελτιστοποίηση για πολύ μεγάλες οθόνες */
-        @media (min-width: 1600px) {
-            .container {
-                max-width: 1400px;
-            }
-            
-            .games-container {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Εισαγωγική Σελίδα -->
-    <div id="index" class="page active">
-        <h1 class="main-title">Μάθε την Ιστορία των Φαρσάλων μέσα από το Παιχνίδι</h1>
-        
-        <div class="container menu-container">
-            <div class="menu-button" onclick="showPage('cryptolexa')">Κρυπτόλεξα</div>
-            <div class="menu-button quiz-button" onclick="showPage('quiz')">Κουίζ Γνώσεων</div>
-            <div class="menu-button puzzle-button" onclick="showPage('puzzle')">Puzzle Games</div>
-            <a href="https://conchr.github.io/Hangman-Villages/" class="menu-button hangman-button">Κρεμάλα Μάθε τα χωριά της Επαρχίας</a>
+
+    <div class="presentation-container">
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
         </div>
 
-        <!-- Νέο κουμπί Farsala Center Page -->
-        <div class="center-button-container">
-            <a href="https://conchr.github.io/Farsala-Center-Page/" class="farsala-center-button">Farsala Center Page</a>
-        </div>
-        
-        <footer>
-            <div class="footer-main">Δημιουργήθηκε με ❤️ για τη μάθηση της ιστορίας των Φαρσάλων</div>
-            <div class="creator-credit">Created by: Κωνσταντίνος Χριστοδούλου</div>
-        </footer>
-    </div>
+        <!-- Header -->
+        <header class="site-header">
+            <p class="municipality-header">ΔΗΜΟΣ ΦΑΡΣΑΛΩΝ · 2026</p>
+            <h1 class="page-main-title">
+                <i class="fas fa-gamepad"></i>
+                <span id="main-title-text">Μάθε την Ιστορία μέσα από το Παιχνίδι</span>
+            </h1>
+            <p class="page-subtitle" id="main-subtitle-text">Διαδραστικά παιχνίδια για μικρούς και μεγάλους</p>
+        </header>
 
-    <!-- Σελίδα Κρυπτόλεξα -->
-    <div id="cryptolexa" class="page">
-        <h1 class="main-title">Κρυπτόλεξα</h1>
-        
-        <div class="container">
-            <h2 class="section-title">Επιλέξτε ένα Κρυπτόλεξο</h2>
-            
-            <div class="games-container">
-                <a href="https://conchr.github.io/Kipseli-Hangman/" class="game-button">
-                    <div class="game-title">Πήλινη Κυψέλη</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Baniera-Hangman/" class="game-button">
-                    <div class="game-title">Μπανιέρα - Λουτήρας</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Katadesmos-Hangman/" class="game-button">
-                    <div class="game-title">Μολύβδινος Κατάδεσμος</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Amforeas-Hangman/" class="game-button">
-                    <div class="game-title">Αμφορέας - Σίσυφος, Αυτόλυκος</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Astragaloi/" class="game-button">
-                    <div class="game-title">Οστέϊνοι Αστράγαλοι</div>
-                </a>
-                
-                <!-- Νέο κουμπί Σταμνοειδής Πυξίδα -->
-                <a href="https://conchr.github.io/Stamnoidis-Pixida-Hangman/" class="game-button">
-                    <div class="game-title">Σταμνοειδής Πυξίδα</div>
+        <div class="slide-wrapper">
+
+            <!-- PAGE 1 — Main menu -->
+            <div class="page active" id="page-index">
+                <div class="page-content">
+                    <div class="menu-grid">
+                        <button class="menu-button menu-cryptolexa" onclick="showPage('cryptolexa')">
+                            <span class="menu-icon">🔤</span>
+                            <span class="menu-label">Κρυπτόλεξα</span>
+                            <span class="menu-desc">Βρες τις λέξεις</span>
+                        </button>
+
+                        <button class="menu-button menu-quiz" onclick="showPage('quiz')">
+                            <span class="menu-icon">🎯</span>
+                            <span class="menu-label">Κουίζ Γνώσεων</span>
+                            <span class="menu-desc">7 κουίζ για την ιστορία</span>
+                        </button>
+
+                        <button class="menu-button menu-puzzle" onclick="showPage('puzzle')">
+                            <span class="menu-icon">🧩</span>
+                            <span class="menu-label">Puzzle Games</span>
+                            <span class="menu-desc">Συναρμολόγησε εικόνες</span>
+                        </button>
+
+                        <a href="https://conchr.github.io/Hangman-Villages/" class="menu-button menu-hangman">
+                            <span class="menu-icon">🏘️</span>
+                            <span class="menu-label">Κρεμάλα</span>
+                            <span class="menu-desc">Μάθε τα χωριά της επαρχίας</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2 — Cryptolexa -->
+            <div class="page" id="page-cryptolexa">
+                <div class="page-content">
+                    <div class="page-header">
+                        <h2 class="page-heading">
+                            <i class="fas fa-search"></i>
+                            Κρυπτόλεξα
+                        </h2>
+                        <p class="page-heading-sub">Επίλεξε ένα κρυπτόλεξο για να ξεκινήσεις</p>
+                    </div>
+
+                    <div class="games-grid" id="games-cryptolexa">
+                        <!-- Generated by app.js -->
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="nav-button" onclick="showPage('index')">
+                            <i class="fas fa-arrow-left"></i> Επιστροφή
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 3 — Quiz -->
+            <div class="page" id="page-quiz">
+                <div class="page-content">
+                    <div class="page-header">
+                        <h2 class="page-heading">
+                            <i class="fas fa-question-circle"></i>
+                            Κουίζ Γνώσεων
+                        </h2>
+                        <p class="page-heading-sub">Επίλεξε ένα κουίζ για να δοκιμάσεις τις γνώσεις σου</p>
+                    </div>
+
+                    <div class="games-grid" id="games-quiz">
+                        <!-- Generated by app.js -->
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="nav-button" onclick="showPage('index')">
+                            <i class="fas fa-arrow-left"></i> Επιστροφή
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 4 — Puzzle -->
+            <div class="page" id="page-puzzle">
+                <div class="page-content">
+                    <div class="page-header">
+                        <h2 class="page-heading">
+                            <i class="fas fa-puzzle-piece"></i>
+                            Puzzle Games
+                        </h2>
+                        <p class="page-heading-sub">Επίλεξε ένα puzzle για να συναρμολογήσεις</p>
+                    </div>
+
+                    <div class="games-grid" id="games-puzzle">
+                        <!-- Generated by app.js -->
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="nav-button" onclick="showPage('index')">
+                            <i class="fas fa-arrow-left"></i> Επιστροφή
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation Footer -->
+        <div class="navigation-footer">
+            <div class="central-return-row">
+                <a href="https://conchr.github.io/Farsala-Center-Page/" class="central-page-button">
+                    <i class="fas fa-home"></i> Κεντρική Σελίδα
                 </a>
             </div>
-            
-            <div class="back-button" onclick="showPage('index')">Επιστροφή στην Αρχική Σελίδα</div>
+            <p class="keyboard-hint">
+                <i class="fas fa-heart"></i>
+                Δημιουργήθηκε για τη μάθηση της ιστορίας των Φαρσάλων
+            </p>
+            <p class="creator-credit">Created by: Κωνσταντίνος Χριστοδούλου</p>
         </div>
 
-        <!-- Νέο κουμπί Farsala Center Page -->
-        <div class="center-button-container">
-            <a href="https://conchr.github.io/Farsala-Center-Page/" class="farsala-center-button">Farsala Center Page</a>
-        </div>
-
-        <footer>
-            <div class="footer-main">Δημιουργήθηκε με ❤️ για τη μάθηση της ιστορίας των Φαρσάλων</div>
-            <div class="creator-credit">Created by: Κωνσταντίνος Χριστοδούλου</div>
-        </footer>
     </div>
 
-    <!-- Σελίδα Κουίζ Γνώσεων -->
-    <div id="quiz" class="page">
-        <h1 class="main-title">Κουίζ Γνώσεων</h1>
-        
-        <div class="container">
-            <h2 class="section-title">Επιλέξτε ένα Κουίζ</h2>
-            
-            <div class="games-container">
-                <a href="https://conchr.github.io/Kastro-Kallitheas-Pr-for-Quiz/" class="game-button quiz">
-                    <div class="game-title">Κάστρο Καλλιθέας</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Karamichos-Pr-for-Quiz/" class="game-button quiz">
-                    <div class="game-title">Πύργος Καραμίχου</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Kynos-Pr-for-Quiz/" class="game-button quiz">
-                    <div class="game-title">Μάχη Κυνός Κεφαλαί</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Actopolis-Pr-for-Quiz/" class="game-button quiz">
-                    <div class="game-title">Ακρόπολη Φαρσάλων</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Passa-Pr-for-Quiz/" class="game-button quiz">
-                    <div class="game-title">Γέφυρα του Πασσά</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Achilles-Pr-for-Quiz/" class="game-button quiz">
-                    <div class="game-title">Αχιλλέας</div>
-                </a>
-                
-                <a href="https://conchr.github.io/1897-Pr-for-Quiz/" class="game-button quiz">
-                    <div class="game-title">Ατυχής Πόλεμος</div>
-                </a>
-            </div>
-            
-            <div class="back-button" onclick="showPage('index')">Επιστροφή στην Αρχική Σελίδα</div>
-        </div>
+    <script src="app.js"></script>
 
-        <!-- Νέο κουμπί Farsala Center Page -->
-        <div class="center-button-container">
-            <a href="https://conchr.github.io/Farsala-Center-Page/" class="farsala-center-button">Farsala Center Page</a>
-        </div>
-
-        <footer>
-            <div class="footer-main">Δημιουργήθηκε με ❤️ για τη μάθηση της ιστορίας των Φαρσάλων</div>
-            <div class="creator-credit">Created by: Κωνσταντίνος Χριστοδούλου</div>
-        </footer>
-    </div>
-
-    <!-- Σελίδα Puzzle Games -->
-    <div id="puzzle" class="page">
-        <h1 class="main-title">Puzzle Games</h1>
-        
-        <div class="container">
-            <h2 class="section-title">Επιλέξτε ένα Puzzle</h2>
-            
-            <div class="games-container">
-                <a href="https://conchr.github.io/Dimotiko-Puzzle/" class="game-button puzzle">
-                    <div class="game-title">Puzzle #1</div>
-                </a>
-                
-                <a href="https://conchr.github.io/Argaleios-Puzzle/" class="game-button puzzle">
-                    <div class="game-title">Puzzle #2</div>
-                </a>
-                
-                <!-- Νέο κουμπί Puzzle #3 (δύσκολο) -->
-                <a href="https://conchr.github.io/Kallithea-Puzzle/" class="game-button puzzle">
-                    <div class="game-title">Puzzle #3 (δύσκολο)</div>
-                </a>
-            </div>
-            
-            <div class="back-button" onclick="showPage('index')">Επιστροφή στην Αρχική Σελίδα</div>
-        </div>
-
-        <!-- Νέο κουμπί Farsala Center Page -->
-        <div class="center-button-container">
-            <a href="https://conchr.github.io/Farsala-Center-Page/" class="farsala-center-button">Farsala Center Page</a>
-        </div>
-
-        <footer>
-            <div class="footer-main">Δημιουργήθηκε με ❤️ για τη μάθηση της ιστορίας των Φαρσάλων</div>
-            <div class="creator-credit">Created by: Κωνσταντίνος Χριστοδούλου</div>
-        </footer>
-    </div>
-
-    <script>
-        // Λειτουργία για εναλλαγή σελίδων
-        function showPage(pageId) {
-            // Απόκρυψη όλων των σελίδων
-            const pages = document.querySelectorAll('.page');
-            pages.forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Εμφάνιση της επιλεγμένης σελίδας
-            const activePage = document.getElementById(pageId);
-            if (activePage) {
-                activePage.classList.add('active');
-                
-                // Scroll στην κορυφή της σελίδας
-                window.scrollTo(0, 0);
-                
-                // Ενημέρωση του URL (προαιρετικό - για ιστορικό πλοήγησης)
-                history.pushState({page: pageId}, '', `#${pageId}`);
-            }
-        }
-
-        // Επεξεργασία του browser back button
-        window.addEventListener('popstate', function(event) {
-            const hash = window.location.hash.substring(1) || 'index';
-            showPage(hash);
-        });
-
-        // Αρχικοποίηση - έλεγχος hash στο URL
-        window.addEventListener('load', function() {
-            const hash = window.location.hash.substring(1);
-            if (hash && document.getElementById(hash)) {
-                showPage(hash);
-            } else {
-                showPage('index');
-            }
-        });
-
-        // Βελτιστοποίηση για touch devices
-        document.addEventListener('touchstart', function() {}, {passive: true});
-    </script>
 </body>
 </html>
